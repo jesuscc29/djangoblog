@@ -4,6 +4,7 @@ from djangoblog import settings
 
 urlpatterns = patterns('',
                        url(r'^$', 'djangoblog.views.home', name='home'),
+                       url(r'login/', 'djangoblog.views.login', name='login'),
                        url(r'^blog/', include('blog.urls')),
                        url(r'^admin/', include(admin.site.urls)),
 
