@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'blog'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -96,6 +97,12 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'templates_folder/static/')
+
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
 
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'templates_folder/media/')
 

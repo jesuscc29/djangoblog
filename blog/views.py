@@ -1,8 +1,21 @@
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
+from django.views.generic import ListView
+from blog.models import *
 
 
-def blog_home(request):
-    var = {}
-    var_tmp = RequestContext(request, var)
-    return render_to_response('blog/index.html', var_tmp)
+class BlogHome(ListView):
+    template_name = 'blog/index.html'
+    paginate_by = 10
+    page_kwarg = 'pagina'
+
+    def get_queryset(self):
+        return Post.objects.exclude(
+            published=False
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(BlogHome, self).get_context_data(**kwargs)
+        context['last'] = self.request.session.get('last_login', None)
+
+        return context

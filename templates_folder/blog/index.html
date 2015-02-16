@@ -1,6 +1,48 @@
 {% extends "base.html" %}
 {% block title %}Blog home{% endblock %}
 {% block content %}
-    <h1>This is the blog...</h1>
-    <button type="button" class="btn btn-default">Click me</button>
+    <h1>Welcome to the blog</h1>
+    <h3>Recent Entries</h3>
+    <hr/>
+
+
+    <div class="col-md-12">
+        {% for post in object_list %}
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="{{ MEDIA_URL }}{{ post.thumbnail }}" alt="thumbnail"/>
+                </div>
+                <div class="col-md-9">
+                    <h3>{{ post.title }}</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <br/>
+                    <strong>Author: </strong>
+                    {{ post.author.username }}<br/>
+                    <strong>Published: </strong>
+                    {{ post.published_date|date:"d M Y h:m:sA" }}
+                </div>
+                <div class="col-md-9">
+                    {{ post.content|truncatewords_html:50|safe }}
+                    <a href="#">read more &raquo;</a>
+                </div>
+            </div>
+            <hr/>
+        {% endfor %}
+        {% if is_paginated %}
+            <div class="row pagination text-center">
+                {% if page_obj.has_previous %}
+                    <a href="{% url "blog_home" %}?pagina={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+                {% if page_obj.has_next %}
+                    <a href="{% url "blog_home" %}?pagina={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
