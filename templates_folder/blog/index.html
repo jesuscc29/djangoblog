@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Blog home{% endblock %}
 {% block content %}
-    <h1>Welcome to the blog</h1>
-    <h3>Recent Entries</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Welcome to the blog</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h3>Recent Entries</h3>
+        </div>
+        <div class="col-md-2">
+            <a href="{% url "new_post" %}">Nueva entrada <i class="fa fa-edit"></i> </a>
+        </div>
+    </div>
     <hr/>
-
 
     <div class="col-md-12">
         {% for post in object_list %}

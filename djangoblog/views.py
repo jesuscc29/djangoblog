@@ -14,4 +14,4 @@ def home(request):
 def login(request):
     var = {}
     var_tmp = RequestContext(request, var)
-    return  render_to_response('login.html', var_tmp)
+    return render_to_response('login.html', var_tmp)

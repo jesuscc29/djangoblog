@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from blog.models import *
 
 
@@ -19,3 +19,7 @@ class BlogHome(ListView):
         context['last'] = self.request.session.get('last_login', None)
 
         return context
+
+
+class PostCreate(CreateView):
+    template_name = ''
