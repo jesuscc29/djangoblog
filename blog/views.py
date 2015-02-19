@@ -22,4 +22,9 @@ class BlogHome(ListView):
 
 
 class PostCreate(CreateView):
-    template_name = ''
+    template_name = 'generic/generic_form.html'
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super(PostCreate, self).get_context_data(**kwargs)
+        return context
