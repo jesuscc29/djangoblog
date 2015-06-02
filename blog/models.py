@@ -61,7 +61,7 @@ class Post(models.Model):
             image.save(temp_handle, 'png')
 
             temp_handle.seek(0)
-            #save to model
+            # save to model
             suf = SimpleUploadedFile(
                 os.path.split(self.featured_image.name)[-1],
                 temp_handle.read(),
@@ -81,10 +81,6 @@ class Post(models.Model):
         @param height:  integer, the current height of the image
         @param longest_side:   the longest side of the resized image
         @return: resized width, height
-        >>> scale_dimensions(680, 480, 340)
-        340, 240
-        >>> scale_dimensions(480, 680, 340)
-        240, 340
         """
         if width > height:
             if width > longest_side:

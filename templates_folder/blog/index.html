@@ -3,20 +3,21 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <h1>Welcome to the blog</h1>
+            <h2>Welcome to the blog</h2>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-10">
-            <h3>Recent Entries</h3>
-        </div>
+        <div class="col-md-10"></div>
         <div class="col-md-2">
-            <a href="{% url "new_post" %}">Nueva entrada <i class="fa fa-edit"></i> </a>
+            {% if request.session.logged %}
+                <a href="{% url "new_post" %}">Nueva entrada <i class="fa fa-edit"></i> </a>
+            {% endif %}
         </div>
     </div>
     <hr/>
 
     <div class="col-md-12">
+    {% if object_list %}
         {% for post in object_list %}
             <div class="row">
                 <div class="col-md-3">
@@ -54,5 +55,8 @@
                 {% endif %}
             </div>
         {% endif %}
+    {% else %}
+        No hay entradas.
+    {% endif %}
     </div>
 {% endblock %}
