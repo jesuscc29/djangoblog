@@ -25,6 +25,6 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'templates_folder/static/'),
 )
 
-INSTALLED_APPS += (
-    'debug_toolbar',
-)
+# INSTALLED_APPS += (
+#     'debug_toolbar',
+# )

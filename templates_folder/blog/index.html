@@ -21,10 +21,12 @@
         {% for post in object_list %}
             <div class="row">
                 <div class="col-md-3">
-                    <img src="{{ MEDIA_URL }}{{ post.thumbnail }}" alt="thumbnail"/>
+                    <a href="{% url "post_single" pk=post.pk %}">
+                        <img src="{{ MEDIA_URL }}{{ post.thumbnail }}" alt="thumbnail"/>
+                    </a>
                 </div>
                 <div class="col-md-9">
-                    <h3>{{ post.title }}</h3>
+                    <a href="{% url "post_single" pk=post.pk %}"><h3>{{ post.title }}</h3></a>
                 </div>
             </div>
             <div class="row">
@@ -33,11 +35,11 @@
                     <strong>Author: </strong>
                     {{ post.author.username }}<br/>
                     <strong>Published: </strong>
-                    {{ post.published_date|date:"d M Y h:m:sA" }}
+                    {{ post.published_date|date:"d M Y" }}
                 </div>
                 <div class="col-md-9">
-                    {{ post.content|truncatewords_html:50|safe }}
-                    <a href="#">read more &raquo;</a>
+                    {{ post.content|truncatewords_html:100|safe }}
+                    <a href="{% url "post_single" pk=post.pk %}">Leer completo &raquo;</a>
                 </div>
             </div>
             <hr/>
@@ -45,13 +47,13 @@
         {% if is_paginated %}
             <div class="row pagination text-center">
                 {% if page_obj.has_previous %}
-                    <a href="{% url "blog_home" %}?pagina={{ page_obj.previous_page_number }}">Previous</a>
+                    <a href="{% url "blog_home" %}?pagina={{ page_obj.previous_page_number }}" class="btn btn-default">Anterior</a>
                 {% endif %}
                 <span class="page-current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
+                    <button class="btn btn-default" disabled>{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</button> {# de {{ page_obj.paginator.num_pages }} #}
+                </span>
                 {% if page_obj.has_next %}
-                    <a href="{% url "blog_home" %}?pagina={{ page_obj.next_page_number }}">Next</a>
+                    <a href="{% url "blog_home" %}?pagina={{ page_obj.next_page_number }}" class="btn btn-default">Siguiente</a>
                 {% endif %}
             </div>
         {% endif %}

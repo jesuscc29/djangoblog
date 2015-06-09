@@ -7,5 +7,12 @@ from .views import *
 urlpatterns = patterns('',
                        url(r'^$', BlogHome.as_view(), name='blog_home'),
                        url(r'^nuevo/post/$', create_post, name='new_post'),
+                       url(r'^herramientas/imc/$', imc_calculator,
+                           name='imc_calculator'),
+                       url(r'^herramientas/peso_ideal/$',
+                           ideal_weight_calculator,
+                           name='ideal_weight_calculator'),
+                       url(r'^blog/post/(?P<pk>\d+)/$', PostSingle.as_view(),
+                           name='post_single'),
                        )
 

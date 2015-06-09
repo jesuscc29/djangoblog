@@ -10,6 +10,7 @@
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}font-awesome/css/font-awesome.min.css">
+{#    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/js/jquery-ui/jquery-ui-1.10.1.custom.min.css"/>#}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,7 +33,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url "home" %}">Name</a>
+            <a class="navbar-brand" href="{% url "blog_home" %}">Name</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -43,8 +44,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Herramientas
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Conoce tu IMC</a></li>
-                        <li><a href="#">Otra cosa</a></li>
+                        <li><a href="{% url "imc_calculator" %}">Conoce tu IMC</a></li>
+                        <li><a href="{% url "ideal_weight_calculator" %}">¿Cu&aacute;l es mi peso ideal?</a></li>
                     </ul>
                 </li>
             </ul>
@@ -66,8 +67,9 @@
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="{{ STATIC_URL }}bootstrap/js/jquery-1.8.3.min.js"></script>
+{#<script src="{{ STATIC_URL }}bootstrap/js/jquery-1.8.3.min.js"></script>#}
 <script src="{{ STATIC_URL }}js/jquery-1.11.3.min.js"></script>
+{#<script src="{{ STATIC_URL }}bootstrap/js/jquery-ui/jquery-ui-1.10.1.custom.min.js"></script>#}
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
