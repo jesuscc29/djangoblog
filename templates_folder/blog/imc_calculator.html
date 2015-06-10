@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Herramientas | IMC{% endblock %}
+{% block aditional_css %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/table-responsive.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/general_styles.css"/>
+{% endblock %}
+{% block content %}
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h2>Tu IMC</h2>
+            <hr/>
+            <strong>Sabias que..</strong>
+            <br/><br/>
+
+            <p class="text-justify">
+                Aenean massa. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Nam
+                commodo suscipit quam. Quisque id mi. Quisque id odio.
+                Nulla sit amet est. Praesent nonummy mi in odio. Ut tincidunt tincidunt erat. Curabitur vestibulum
+                aliquam leo. Nunc nec neque.
+                Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi mauris ac
+                eros. Mauris turpis nunc, blandit et, volutpat molestie, porta ut, ligula. Sed mollis, eros et ultrices
+                tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Donec venenatis vulputate lorem.
+                Curabitur blandit mollis lacus.
+                Suspendisse faucibus, nunc et pellentesque egestas, lacus ante convallis tellus, vitae iaculis lacus
+                elit id tortor. Ut id nisl quis enim dignissim sagittis.. Donec mi odio, faucibus at, scelerisque quis,
+                convallis in, nisi. Sed magna purus, fermentum eu, tincidunt eu, varius ut, felis.
+            </p>
+            <hr/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-9">
+                    <label for="personHeight">Ingrese su Altura:</label>
+                    <input type="text" class="form-control" id="personHeight" placeholder="Altura (mts)"/>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col-md-9">
+                    <label for="personHeight">Ingrese su Peso:</label>
+                    <input type="text" class="form-control" id="personWeight" placeholder="Peso (Kgs)"/>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col-md-9">
+                    <label for="personGender">Sexo:</label>
+                    <select id="personGender" class="form-control">
+                        <option value="0"></option>
+                        <option value="1">Mujer</option>
+                        <option value="2">Hombre</option>
+                    </select>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success" id="btnCalculateIMC">Calcular</button>
+                </div>
+                <div class="col-md-5">
+                    <button class="btn btn-warning" id="btnClean">Limpiar</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4><strong>Tu IMC es de: <span id="imcResult">-</span></strong></h4>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <table class="table table-striped" id="imcTable">
+                    <thead>
+                    <tr>
+                        <th>Mujeres</th>
+                        <th>Hombres</th>
+                        <th>Diagn&oacute;stico</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="imc-0">
+                        <td>< de 16</td>
+                        <td>< de 17</td>
+                        <td>Desnutrici&oacute;n</td>
+                    </tr>
+                    <tr id="imc-1">
+                        <td>17 a 20</td>
+                        <td>18 a 20</td>
+                        <td>Bajo Peso</td>
+                    </tr>
+                    <tr id="imc-2">
+                        <td>21 a 24</td>
+                        <td>21 a 25</td>
+                        <td>NORMAL</td>
+                    </tr>
+                    <tr id="imc-3">
+                        <td>25 a 29</td>
+                        <td>26 a 30</td>
+                        <td>Sobrepeso</td>
+                    </tr>
+                    <tr id="imc-4">
+                        <td>30 a 34</td>
+                        <td>31 a 35</td>
+                        <td>Obesidad</td>
+                    </tr>
+                    <tr id="imc-5">
+                        <td>35 a 39</td>
+                        <td>36 a 40</td>
+                        <td>Obesidad Marcada</td>
+                    </tr>
+                    <tr id="imc-6">
+                        <td>> de 40</td>
+                        <td>> de 40</td>
+                        <td>Obesidad M&oacute;rbida</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'modals/error_modal.html' %}
+{% endblock %}
+{% block aditional_js %}
+    <script>
+
+        $(document).on("ready", function () {
+
+            var $errorModal = $("#errorModal");
+
+            $("#btnCalculateIMC").click(function () {
+                cleanTable();
+                var height = $("#personHeight").val();
+                var weight = $("#personWeight").val();
+                var $gender = $("#personGender");
+                if (height != '' && weight != '' && $gender.find("option:selected").val() != '0') {
+                    var imc = parseFloat(weight) / Math.pow(parseFloat(height), 2);
+                    imc = Math.floor(imc * 100) / 100;
+                    if (!isNaN(imc)) {
+                        $("#imcResult").text(imc);
+                        imc = parseFloat(imc);
+                        if($gender.val() == 1) {
+                            if(imc < 16) {
+                                $("#imc-0").addClass("imc-low-status");
+                            } else if(imc >=17 && imc < 21) {
+                                $("#imc-1").addClass("imc-low-status");
+                            } else if(imc >=21 && imc < 25) {
+                                $("#imc-2").addClass("imc-normal-status");
+                            } else if(imc >=25 && imc < 30) {
+                                $("#imc-3").addClass("imc-warning-status");
+                            } else if(imc >= 30 && imc < 35) {
+                                $("#imc-4").addClass("imc-warning-status");
+                            } else if(imc >= 35 && imc < 40) {
+                                $("#imc-5").addClass("imc-warning-status");
+                            } else if(imc >= 40) {
+                                $("#imc-6").addClass("imc-warning-status");
+                            }
+                        } else {
+                            if(imc < 17) {
+                                $("#imc-0").addClass("imc-low-status");
+                            } else if(imc >=18 && imc < 21) {
+                                $("#imc-1").addClass("imc-low-status");
+                            } else if(imc >=21 && imc < 26) {
+                                $("#imc-2").addClass("imc-normal-status");
+                            } else if(imc >=26 && imc < 30) {
+                                $("#imc-3").addClass("imc-warning-status");
+                            } else if(imc >= 31 && imc < 36) {
+                                $("#imc-4").addClass("imc-warning-status");
+                            } else if(imc >= 36 && imc < 41) {
+                                $("#imc-5").addClass("imc-warning-status");
+                            } else if(imc >= 40) {
+                                $("#imc-6").addClass("imc-warning-status");
+                            }
+                        }
+                    } else {
+                        $errorModal.find(".modal-body").text("Ingrese solo valores numéricos.");
+                        $errorModal.modal("show");
+                    }
+                } else {
+                    $errorModal.find(".modal-body").text("No deje los campos vacios.");
+                    $errorModal.modal("show");
+                }
+            });
+
+            $("#btnClean").click(function () {
+                $("#personHeight").val("");
+                $("#personWeight").val("");
+                $("#personGender").val("0");
+                $("#imcResult").text("-");
+                cleanTable();
+            });
+
+            function cleanTable() {
+                var $table = $("#imcTable").find("tr");
+                $table.removeAttr("class");
+            }
+        });
+    </script>
+{% endblock %}

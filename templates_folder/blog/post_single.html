@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Index Page{% endblock %}
+{% block aditional_css %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/general_styles.css"/>
+{% endblock %}
+{% block content %}
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h2>{{ object.title }}</h2>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-3">
+            <img src="{{ MEDIA_URL }}{{ object.featured_image }}" alt="Featured Image" class="post-image"/>
+        </div>
+        <div class="col-md-9">
+            <b>Autor: {{ object.author.first_name }} {{ object.author.last_name }}</b>
+            <br/><br/>
+            {{ object.content }}
+        </div>
+    </div>
+{% endblock %}
