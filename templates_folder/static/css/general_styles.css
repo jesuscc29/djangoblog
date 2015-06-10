@@ -1,0 +1,19 @@
+.imc-low-status {
+    background-color: #ffffe0 !important;
+    color: #000000;
+}
+
+.imc-normal-status {
+    background-color: #8fbc8f !important;
+    color: #ffffff;
+}
+
+.imc-warning-status {
+    background-color: #ff4500 !important;
+    color: #ffffff;
+}
+
+.post-image {
+    height: 90px;
+    width: 200px;
+}
