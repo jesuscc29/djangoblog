@@ -14,5 +14,7 @@ urlpatterns = patterns('',
                            name='ideal_weight_calculator'),
                        url(r'^blog/post/(?P<pk>\d+)/$', PostSingle.as_view(),
                            name='post_single'),
+                       url(r'^gastos_energeticos/$', basal_energy_waste,
+                           name='basal_energy_waste'),
                        )
 

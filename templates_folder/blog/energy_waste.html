@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Herramientas | GE{% endblock %}
+{% block aditional_css %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/table-responsive.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/general_styles.css"/>
+{% endblock %}
+{% block content %}
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h2>Gastos Energ&eacute;ticos</h2>
+            <hr/>
+            <strong>GEB (Gasto Energ&eacute;tico Basal)</strong>
+            <br/><br/>
+
+            <p class="text-justify">
+                Aenean massa. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Nam
+                commodo suscipit quam. Quisque id mi. Quisque id odio.
+                Nulla sit amet est. Praesent nonummy mi in odio. Ut tincidunt tincidunt erat. Curabitur vestibulum
+                aliquam leo. Nunc nec neque.
+            </p>
+            <hr/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row m-bot15">
+                <div class="col-md-9">
+                    <label for="personHeight">Ingrese su Altura:</label>
+                    <input type="text" class="form-control" id="personHeight" placeholder="Altura (mts)"/>
+                </div>
+            </div>
+            <div class="row m-bot15">
+                <div class="col-md-9">
+                    <label for="personHeight">Ingrese su Peso:</label>
+                    <input type="text" class="form-control" id="personWeight" placeholder="Peso (Kgs)"/>
+                </div>
+            </div>
+            <div class="row m-bot15">
+                <div class="col-md-9">
+                    <label for="personHeight">Ingrese su Edad:</label>
+                    <input type="text" class="form-control" id="personAge" placeholder="Edad"/>
+                </div>
+            </div>
+            <div class="row m-bot15">
+                <div class="col-md-9">
+                    <label for="personHeight">Sexo:</label>
+                    <select id="personGender" class="form-control">
+                        <option value="0"></option>
+                        <option value="1">Mujer</option>
+                        <option value="2">Hombre</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success" id="btnCalculateGeb">Calcular</button>
+                </div>
+                <div class="col-md-5">
+                    <button class="btn btn-warning" id="btnClean">Limpiar</button>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4><strong>GEB: <span id="totalGeb"></span></strong></h4>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+    {% include 'modals/error_modal.html' %}
+{% endblock %}
+{% block aditional_js %}
+    <script>
+
+        $(document).on("ready", function () {
+
+            var $errorModal = $("#errorModal");
+
+            var MALE_GENDER = 2;
+            var FEMALE_GENDER = 1;
+
+            var geb_result = 0;
+            var $height;
+            var $weight;
+            var $age;
+            var $gender;
+
+            $("#btnCalculateGeb").click(function() {
+
+                $height = $("#personHeight").val();
+                $weight = $("#personWeight").val();
+                $age = $("#personAge").val();
+                $gender = $("#personGender").find("option:selected");
+
+                if(isNotEmpty() && isValidValue()) {
+                    if ($gender.val() == MALE_GENDER) {
+                        geb_result = 66.47 + (13.75 * parseFloat($weight)) +
+                            (5 * parseFloat($height)) - (6.76 * parseInt($age));
+                    } else {
+                        geb_result = 65.51 + (9.56 * parseFloat($weight)) +
+                            (1.85 * parseFloat($height)) - (4.68 * parseInt($age));
+                    }
+                    geb_result = Math.floor(geb_result * 100) / 100
+                    $("#totalGeb").text(geb_result + " Kcal");
+                } else {
+                    $errorModal.find(".modal-body").text("No deje los campos vacios.");
+                    $errorModal.modal("show");
+                }
+            });
+
+            $("#btnClean").click(function () {
+                $("#personHeight").val("");
+                $("#personWeight").val("");
+                $("#personAge").val("");
+                $("#personGender").val(0);
+                $("#totalGeb").text("");
+            });
+
+            function isNotEmpty() {
+                if($height != "" && $weight != "" && $age != "" && $gender.val() != 0) {
+                    return true;
+                }
+                return false;
+            }
+
+            function isValidValue() {
+                if(!isNaN($height) && !isNaN($weight) && !isNaN($age)) {
+                    return true;
+                }
+                return false;
+            }
+
+        });
+    </script>
+{% endblock %}

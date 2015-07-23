@@ -58,6 +58,13 @@ def ideal_weight_calculator(request):
                               request_context)
 
 
+def basal_energy_waste(request):
+    context = dict()
+    request_context = RequestContext(request, context)
+    return render_to_response('blog/energy_waste.html',
+                              request_context)
+
+
 class PostSingle(DetailView):
     template_name = 'blog/post_single.html'
 
