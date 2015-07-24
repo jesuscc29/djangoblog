@@ -18,50 +18,52 @@
                             </a>
                         </div>
                     </div>
-                    <table class="table table-bordered table-responsive">
-                        <tr>
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">Edad</th>
-                            <th class="text-center">Sexo</th>
-                            <th class="text-center">Tel&eacute;fono</th>
-                            <th class="text-center">Correo</th>
-                            <th class="text-center">&Uacute;ltima Visita</th>
-                        </tr>
-                        {% for patient in patients %}
-                            <tr class="text-center">
-                                <td>{{ patient.name }} {{ patient.last_name }}</td>
-                                <td>{{ patient.age }}</td>
-                                <td>
-                                    {% if patient.gender == 0 %}
-                                        <i class="fa fa-female female-icon-color"></i>
-                                    {% else %}
-                                        <i class="fa fa-male male-icon-color"></i>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if patient.phone_number %}
-                                        {{ patient.phone_number }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if patient.email %}
-                                        {{ patient.email }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if patient.last_visit.date %}
-                                        {{ patient.last_visit.date }}
-                                    {% else %}
-                                        Nunca
-                                    {% endif %}
-                                </td>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Edad</th>
+                                <th class="text-center">Sexo</th>
+                                <th class="text-center">Tel&eacute;fono</th>
+                                <th class="text-center">Correo</th>
+                                <th class="text-center">&Uacute;ltima Visita</th>
                             </tr>
-                        {% endfor %}
-                    </table>
+                            {% for patient in patients %}
+                                <tr class="text-center">
+                                    <td>{{ patient.name }} {{ patient.last_name }}</td>
+                                    <td>{{ patient.age }}</td>
+                                    <td>
+                                        {% if patient.gender == 0 %}
+                                            <i class="fa fa-female female-icon-color"></i>
+                                        {% else %}
+                                            <i class="fa fa-male male-icon-color"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if patient.phone_number %}
+                                            {{ patient.phone_number }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if patient.email %}
+                                            {{ patient.email }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if patient.last_visit.date %}
+                                            {{ patient.last_visit.date }}
+                                        {% else %}
+                                            Nunca
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
