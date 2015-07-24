@@ -1,7 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Herramientas | IMC{% endblock %}
+{% block title %}Herramientas | Peso ideal{% endblock %}
 {% block aditional_css %}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/table-responsive.css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/general_styles.css"/>
 {% endblock %}
 {% block content %}
@@ -35,15 +34,15 @@
             <div class="row">
                 <div class="col-md-9">
                     <label for="personHeight">Ingrese su Altura:</label>
-                    <input type="text" class="form-control" id="personHeight" placeholder="Altura (mts)"/>
+                    <input type="number" class="form-control" id="personHeight" placeholder="Altura (mts)"/>
                 </div>
             </div>
             <br/>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-xs-8 col-sm-10 col-md-6">
                     <button class="btn btn-success" id="btnCalculateWeight">Calcular</button>
                 </div>
-                <div class="col-md-5">
+                <div class="col-xs-3 col-sm-2 col-md-5">
                     <button class="btn btn-warning" id="btnClean">Limpiar</button>
                 </div>
             </div>
@@ -52,12 +51,26 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12">
-                    <h4><strong>Tu peso ideal m&iacute;nimo debe ser: <span id="minWeight"></span></strong></h4>
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">M&iacute;nimo</h3>
+                        </div>
+                        <div class="box-body">
+                            <h4><strong>Tu peso ideal m&iacute;nimo debe ser: <span id="minWeight"></span></strong></h4>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h4><strong>Tu peso ideal m&aacute;ximo debe ser: <span id="maxWeight"></span></strong></h4>
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">M&aacute;ximo</h3>
+                        </div>
+                        <div class="box-body">
+                            <h4><strong>Tu peso ideal m&aacute;ximo debe ser: <span id="maxWeight"></span></strong></h4>
+                        </div>
+                    </div>
                 </div>
             </div>
             <br/>
@@ -80,8 +93,8 @@
                     minWeight = Math.floor(minWeight * 100) / 100;
                     maxWeight = Math.floor(maxWeight * 100) / 100;
                     if (!isNaN(minWeight) && !isNaN(maxWeight)) {
-                        $("#minWeight").text(minWeight);
-                        $("#maxWeight").text(maxWeight);
+                        $("#minWeight").text(minWeight + 'Kg');
+                        $("#maxWeight").text(maxWeight + 'Kg');
                     } else {
                         $errorModal.find(".modal-body").text("Ingrese solo valores numéricos.");
                         $errorModal.modal("show");

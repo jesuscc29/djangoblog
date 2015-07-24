@@ -1,27 +1,41 @@
 .imc-low-status {
-    background-color: #ffffe0 !important;
-    color: #000000;
+    background-color: #f39c12 !important;
 }
 
 .imc-normal-status {
-    background-color: #8fbc8f !important;
-    color: #ffffff;
+    background-color: #01a55a !important;
 }
 
 .imc-warning-status {
-    background-color: #ff4500 !important;
-    color: #ffffff;
+    background-color: #db4b39 !important;
 }
 
-.post-image {
-    height: 90px;
-    width: 200px;
+.m-top15 {
+    margin-top: 15px;
+}
+
+.m-top20 {
+    margin-top: 20px;
 }
 
 .m-bot15 {
     margin-bottom: 15px;
 }
 
-.m-top15 {
-    margin-top: 15px;
+.m-bot20 {
+    margin-bottom: 20px;
+}
+
+.male-icon-color {
+    color: #1190ff;
+    font-size: 18px;
+}
+
+.female-icon-color {
+    color: #ff69b4;
+    font-size: 18px;
+}
+
+.form-error {
+    border-color: #ff0000 !important;
 }

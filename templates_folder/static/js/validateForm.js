@@ -1,0 +1,3 @@
+var validateForm = function(form) {
+
+};

@@ -1,0 +1,23 @@
+.form-error {
+    border-color: #ff0000;
+}
+
+.label-form-error {
+    color: #ff0000;
+}
+
+.player_picture {
+    max-width: 82px;
+    max-height: 82px;
+}
+
+.m-bot15 {
+    margin-bottom: 15px;
+}
+
+.team_mini_image {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    margin-right: 25px;
+}

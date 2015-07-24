@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Consultorio{% endblock %}
+{% block aditional_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/general_styles.css"/>
+{% endblock %}
+{% block content %}
+    <div class="row text-left">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Pacientes</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row text-center m-bot15">
+                        <div class="col-md-12">
+                            <a class="btn btn-success btn-sm" href="{% url "patient_create" %}">
+                                Nuevo Paciente <i class="fa fa-plus-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-responsive">
+                        <tr>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Edad</th>
+                            <th class="text-center">Sexo</th>
+                            <th class="text-center">Tel&eacute;fono</th>
+                            <th class="text-center">Correo</th>
+                            <th class="text-center">&Uacute;ltima Visita</th>
+                        </tr>
+                        {% for patient in patients %}
+                            <tr class="text-center">
+                                <td>{{ patient.name }} {{ patient.last_name }}</td>
+                                <td>{{ patient.age }}</td>
+                                <td>
+                                    {% if patient.gender == 0 %}
+                                        <i class="fa fa-female female-icon-color"></i>
+                                    {% else %}
+                                        <i class="fa fa-male male-icon-color"></i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if patient.phone_number %}
+                                        {{ patient.phone_number }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if patient.email %}
+                                        {{ patient.email }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if patient.last_visit.date %}
+                                        {{ patient.last_visit.date }}
+                                    {% else %}
+                                        Nunca
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

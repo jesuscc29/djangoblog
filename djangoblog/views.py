@@ -31,6 +31,7 @@ def user_login(request):
                     request.session.set_expiry(900)
                 login(request, user)
                 request.session['logged'] = True
+                request.session['name'] = user.first_name
                 url = reverse('home')
                 try:
                     url_get = request.META['HTTP_REFERER']
