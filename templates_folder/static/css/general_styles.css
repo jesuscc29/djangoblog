@@ -39,3 +39,17 @@
 .form-error {
     border-color: #ff0000 !important;
 }
+
+.post-image {
+    max-width: 200px;
+    max-height: 150px;
+}
+
+.blog-content {
+    text-align: justify;
+    margin-top: 20px;
+}
+
+.patient-edit {
+    width: 5px;
+}

@@ -65,7 +65,7 @@
 
             $("#id_phone_number").attr("data-inputmask", '"mask": "(999) 999-9999"').attr("data-mask", "");
 
-            $("#generic_form").find("input.error, select.error").each(function() {
+            $("#generic_form").find("input.error, select.error, textarea.error, input[type=file]").each(function() {
                 $(this).addClass("form-error");
             });
         });

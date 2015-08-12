@@ -32,10 +32,11 @@ def create_post(request):
     form = PostCreateForm(request.POST or None,
                           request.FILES or None)
     if request.method == 'POST':
-        post = form.save(commit=False)
-        post.author = request.user
-        post.save()
-        return HttpResponseRedirect(reverse('blog_home'))
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return HttpResponseRedirect(reverse('blog_home'))
     context['form'] = form
     context['operation'] = 'Creación'
     context['subject'] = 'Post'

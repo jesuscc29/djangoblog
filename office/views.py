@@ -2,8 +2,8 @@ import datetime
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
-from django.views.generic import ListView, CreateView
-from office.forms import AddPatientForm
+from django.views.generic import ListView, CreateView, DetailView
+from office.forms import AddPatientForm, PatientStatsForm
 from office.functions import LoginRequiredMixin
 from office.models import Patient, PatientVisit
 
@@ -46,3 +46,28 @@ class PatientCreate(LoginRequiredMixin, CreateView):
         context['subject'] = 'Paciente'
         context['operation'] = 'Alta'
         return context
+
+
+class PatientDetail(LoginRequiredMixin, DetailView):
+    template_name = 'office/patient_detail.html'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk', None)
+        if pk is not None:
+            patient = Patient.objects.get(pk=pk)
+            return patient
+        else:
+            raise AttributeError('No pk found')
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientDetail, self).get_context_data(**kwargs)
+        context['form'] = PatientStatsForm(instance=self.get_object())
+        return context
+
+
+def save_patient_stats(request, pk):
+    if pk is not None:
+    else:
+        error = dict()
+        error['message'] = 'Object PK not sent.'
+        return response_json(error, 404)

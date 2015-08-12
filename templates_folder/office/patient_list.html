@@ -30,7 +30,11 @@
                             </tr>
                             {% for patient in patients %}
                                 <tr class="text-center">
-                                    <td>{{ patient.name }} {{ patient.last_name }}</td>
+                                    <td>
+                                        <a href="{% url "patient_detail" pk=patient.pk %}">
+                                            {{ patient.name }} {{ patient.last_name }}
+                                        </a>
+                                    </td>
                                     <td>{{ patient.age }}</td>
                                     <td>
                                         {% if patient.gender == 0 %}

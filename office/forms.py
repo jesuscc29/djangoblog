@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.forms import ModelForm
-from office.models import Patient
+from office.models import Patient, PatientStat
 
 __author__ = 'jesuscc29'
 
@@ -15,3 +15,9 @@ class AddPatientForm(ModelForm):
         model = Patient
         fields = ['name', 'last_name', 'gender', 'birthday',
                   'phone_number', 'email']
+
+
+class PatientStatsForm(ModelForm):
+    class Meta:
+        model = PatientStat
+        fields = ['height', 'weight', 'activity']
