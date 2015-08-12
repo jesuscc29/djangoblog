@@ -67,6 +67,7 @@ class PatientDetail(LoginRequiredMixin, DetailView):
 
 def save_patient_stats(request, pk):
     if pk is not None:
+        pass
     else:
         error = dict()
         error['message'] = 'Object PK not sent.'
