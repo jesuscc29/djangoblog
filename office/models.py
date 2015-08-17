@@ -46,6 +46,8 @@ class PatientStat(models.Model):
                                         default=2,
                                         verbose_name='Actividad Física')
     patient = models.ForeignKey(Patient, verbose_name='Paciente')
+    stats_date = models.DateField(default=datetime.date.today(),
+                                  verbose_name='Fecha de datos')
 
     def __str__(self):
         return self.patient.name + ' ' + self.patient.last_name + ' - ' + \
@@ -58,9 +60,20 @@ class PatientVisit(models.Model):
                             default=datetime.date.today())
     description = models.TextField(verbose_name='Detalles de la Consulta',
                                    blank=True, null=True)
-    patient_stats = models.ForeignKey(PatientStat,
-                                      verbose_name='Valores del Paciente')
+    patient = models.ForeignKey(Patient, verbose_name='Paciente')
 
     def __str__(self):
         return str(self.date) + ' ' + self.patient_stats.patient.name + ' ' + \
                self.patient_stats.patient.last_name
+
+
+# TODO: Model description:
+# TODO: The daily reminder need to have a "concept" or "detail" PER HOUR.
+# TODO: So we need to create another model with the relation to this one.
+# TODO: Example: Daily Reminder 17/08/2015, Hour/Time: Morning, Description: Lorem Ipsum Dolor Sit amet.
+#
+# @python_2_unicode_compatible
+# class PatientDailyReminder(models.Model):
+#     date = models.DateField(verbose_name='Fecha de Recordatorio',
+#                             default=datetime.date.today())
+#

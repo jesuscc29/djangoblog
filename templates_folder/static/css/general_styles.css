@@ -53,3 +53,15 @@
 .patient-edit {
     width: 5px;
 }
+
+.green-color {
+    color: #008000;
+}
+
+.red-color {
+    color: #ff0000;
+}
+
+.neutral-color {
+    color: #a9a9a9;
+}

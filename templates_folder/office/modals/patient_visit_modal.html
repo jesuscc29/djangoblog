@@ -1,18 +1,18 @@
 {% load custom_tagsnfilters %}
-<div class="modal" id="patient_status_modal">
+<div class="modal" id="patient_visit_modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Datos Antropom&eacute;tricos</h4>
+                <h4 class="modal-title">Informaci&oacute;n General de la Visita</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
-                        <form action="." method="post" id="patient_stats_form">
+                        <form action="." method="post" id="patient_visit_form">
                             {% csrf_token %}
-                            {% for field in form %}
+                            {% for field in visit_form %}
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label col-sm-3 m-top15">
                                         {{ field.label }}
@@ -24,13 +24,13 @@
                                 </div>
                             {% endfor %}
                         </form>
-                        <input type="text" hidden="hidden" rel="" id="stats_type"/>
+                        <input type="text" hidden="hidden" rel="" id="visit_type"/>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" id="btnSavePatientStatus">Guardar</button>
+                <button type="button" class="btn btn-success" id="btnSavePatientVisit">Guardar</button>
             </div>
         </div>
     </div>

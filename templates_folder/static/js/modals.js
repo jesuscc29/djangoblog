@@ -3,14 +3,14 @@
  */
 
 showErrorAlert = function (title, message) {
-    var $error = $("#error-modal");
+    var $error = $("#errorModal");
     $error.find(".modal-title").text(title);
     $error.find(".modal-body").find("p").text(message);
     $error.modal("show");
 };
 
 showConfirmAlert = function (title, message) {
-    var $error = $("#confirm-modal");
+    var $error = $("#confirmModal");
     $error.find(".modal-title").text(title);
     $error.find(".modal-body").find("p").text(message);
     $error.modal("show");
