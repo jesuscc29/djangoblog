@@ -28,13 +28,13 @@
             <div class="row m-bot15">
                 <div class="col-md-9">
                     <label for="personHeight">Ingrese su Altura:</label>
-                    <input type="number" class="form-control" id="personHeight" placeholder="Altura (mts)"/>
+                    <input type="number" class="form-control" id="personHeight" placeholder="Altura (cm)"/>
                 </div>
             </div>
             <div class="row m-bot15">
                 <div class="col-md-9">
                     <label for="personHeight">Ingrese su Peso:</label>
-                    <input type="number" class="form-control" id="personWeight" placeholder="Peso (Kgs)"/>
+                    <input type="number" class="form-control" id="personWeight" placeholder="Peso (Kg)"/>
                 </div>
             </div>
             <div class="row m-bot15">
@@ -109,7 +109,7 @@
                         geb_result = 66.47 + (13.75 * parseFloat($weight)) +
                             (5 * parseFloat($height)) - (6.76 * parseInt($age));
                     } else {
-                        geb_result = 65.51 + (9.56 * parseFloat($weight)) +
+                        geb_result = 655 + (9.56 * parseFloat($weight)) +
                             (1.85 * parseFloat($height)) - (4.68 * parseInt($age));
                     }
                     geb_result = Math.floor(geb_result * 100) / 100
