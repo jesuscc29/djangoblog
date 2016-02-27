@@ -5,7 +5,8 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.generic import ListView, CreateView, DetailView
 from office.forms import AddPatientForm, PatientStatsForm, PatientVisitForm
-from office.functions import LoginRequiredMixin, get_patient_stat_list
+from office.functions import LoginRequiredMixin, get_patient_stat_list, \
+    get_patient_weight_stats
 from office.models import Patient, PatientVisit, PatientStat
 from recipes import response_json
 
@@ -33,6 +34,7 @@ class PatientList(LoginRequiredMixin, ListView):
                 patient__pk=patient['pk']).last()
             patient.update(last_visit=last_visit)
             patient.update(age=age)
+            patient.update(progress=get_patient_weight_stats(patient['pk']))
         context['patients'] = patients
         return context
 
@@ -70,6 +72,7 @@ class PatientDetail(LoginRequiredMixin, DetailView):
         context['patient_stats'] = stats
         context['patient_visits'] = visits
         context['visit_form'] = PatientVisitForm()
+        context['stats'] = get_patient_weight_stats(self.pk)
         context['form'] = PatientStatsForm()
         return context
 

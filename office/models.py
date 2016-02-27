@@ -63,8 +63,8 @@ class PatientVisit(models.Model):
     patient = models.ForeignKey(Patient, verbose_name='Paciente')
 
     def __str__(self):
-        return str(self.date) + ' ' + self.patient_stats.patient.name + ' ' + \
-               self.patient_stats.patient.last_name
+        return str(self.date) + ' ' + self.patient.name + ' ' + \
+               self.patient.last_name
 
 
 # TODO: Model description:

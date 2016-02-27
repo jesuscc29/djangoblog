@@ -45,13 +45,6 @@
                                                 {% else %}
                                                     (<i class="fa fa-minus neutral-color"></i>)
                                                 {% endif %}
-{#                                                {% if stats.last_weight > stats.weight %}#}
-{#                                                    (<i class="fa fa-arrow-down green-color"></i>)#}
-{#                                                {% elif stats.last_weight < stats.weight %}#}
-{#                                                    (<i class="fa fa-arrow-up red-color"></i>)#}
-{#                                                {% elif stats.last_weight == stats.weight %}#}
-{#                                                    (<i class="fa fa-minus neutral-color"></i>)#}
-{#                                                {% endif %}#}
                                             {% endif %}
                                         {% else %}
                                             Sin datos
@@ -66,7 +59,7 @@
                                     </td>
                                     <td>
                                         {% if stats.stats_date %}
-                                            {{ stats.stats_date|date:"d b Y" }}
+                                            {{ stats.stats_date|date:"d N Y" }}
                                         {% else %}
                                             Sin datos
                                         {% endif %}
@@ -107,7 +100,7 @@
                                 <tr class="text-center">
                                     <td style="width: 120px;">
                                         {% if visit.date %}
-                                            {{ visit.date|date:"d b Y" }}
+                                            {{ visit.date|date:"d N Y" }}
                                         {% else %}
                                             Sin datos
                                         {% endif %}
@@ -140,6 +133,36 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row text-center">
+                {% if stats %}
+                    <div class="col-xs-12 col-md-6">
+                        <div class="info-box {% if stats.weight_down %}bg-green{% else %}bg-red{% endif %}">
+                            <span class="info-box-icon">
+                                {% if stats.weight_down %}
+                                    <i class="fa fa-smile-o"></i>
+                                {% else %}
+                                    <i class="fa fa-frown-o"></i>
+                                {% endif %}
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">
+                                    Desde el d&iacute;a {{ stats.init_date|date:"d N Y" }} hasta hoy has
+                                    {% if stats.weight_down %}
+                                        perdido
+                                    {% else %}
+                                        subido
+                                    {% endif %}
+                                </span>
+                                <span class="info-box-number">{{ stats.weight }} Kgs.</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 100%"></div>
+                                </div>
+                                <span class="progress-description">&nbsp</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -275,6 +298,7 @@
             });
 
             $("#btnAddPatientStatus").click(function() {
+                $("#patient_stats_form").trigger("reset");
                 $("#patient_status_modal").modal("show");
             });
 

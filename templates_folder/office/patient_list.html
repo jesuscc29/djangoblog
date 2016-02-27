@@ -27,6 +27,7 @@
                                 <th class="text-center">Tel&eacute;fono</th>
                                 <th class="text-center">Correo</th>
                                 <th class="text-center">&Uacute;ltima Visita</th>
+                                <th class="text-center">Progreso</th>
                             </tr>
                             {% for patient in patients %}
                                 <tr class="text-center">
@@ -62,6 +63,21 @@
                                             {{ patient.last_visit.date }}
                                         {% else %}
                                             Nunca
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if patient.progress %}
+                                            {% if patient.progress.weight == 0 %}
+                                                0.00 Kgs.
+                                            {% else %}
+                                                {% if patient.progress.weight_down %}
+                                                    <span style="color: #008000;"><b>-{{ patient.progress.weight }} Kgs.</b></span>
+                                                {% else %}
+                                                    <span style="color: #ff0000;"><b>+{{ patient.progress.weight }} Kgs.</b></span>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            S/D
                                         {% endif %}
                                     </td>
                                 </tr>
