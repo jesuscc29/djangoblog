@@ -79,9 +79,9 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'es-mx'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Mexico_City'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -123,16 +123,5 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # change for project url
 DOMAIN = "domain.mx"
-
-try:
-    locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
-except locale.Error:
-    try:
-        locale.setlocale(locale.LC_ALL, 'es_ES')
-    except locale.Error:
-        try:
-            locale.setlocale(locale.LC_ALL, 'es_MX.utf8')
-        except locale.Error:
-            locale.setlocale(locale.LC_ALL, 'es_MX')
 
 PROJECT_NAME = "BLOG"

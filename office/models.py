@@ -1,6 +1,7 @@
 # coding=utf-8
 import datetime
 from django.db import models
+from django.db.models import Sum
 from django.utils.encoding import python_2_unicode_compatible
 
 
@@ -67,13 +68,43 @@ class PatientVisit(models.Model):
                self.patient.last_name
 
 
-# TODO: Model description:
-# TODO: The daily reminder need to have a "concept" or "detail" PER HOUR.
-# TODO: So we need to create another model with the relation to this one.
-# TODO: Example: Daily Reminder 17/08/2015, Hour/Time: Morning, Description: Lorem Ipsum Dolor Sit amet.
-#
-# @python_2_unicode_compatible
-# class PatientDailyReminder(models.Model):
-#     date = models.DateField(verbose_name='Fecha de Recordatorio',
-#                             default=datetime.date.today())
-#
+@python_2_unicode_compatible
+class Person(models.Model):
+    full_name = models.CharField(max_length=150, verbose_name='Nombre')
+    num_guest = models.IntegerField(max_length=2,
+                                    verbose_name='Num. Invitados',
+                                    default=0)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2,
+                                       verbose_name='Monto Total')
+    amount_left = models.DecimalField(max_digits=10, decimal_places=2,
+                                      verbose_name='Monto Restante',
+                                      blank=True,
+                                      null=True)
+
+    def __str__(self):
+        return self.full_name + ': $' + str(self.amount_left)
+
+    def save(self, *args, **kwargs):
+        if self.amount_left is None:
+            self.amount_left = self.total_amount
+        super(Person, self).save()
+
+
+@python_2_unicode_compatible
+class PersonPayment(models.Model):
+    person = models.ForeignKey(Person, verbose_name='Persona')
+    payment_date = models.DateTimeField(verbose_name='Fecha de Pago',
+                                        default=datetime.datetime.now())
+    amount_payed = models.DecimalField(max_digits=10, decimal_places=2,
+                                       verbose_name='Cantidad Pagada')
+
+    def __str__(self):
+        return self.person.full_name + ': $' + str(self.amount_payed)
+
+    def save(self, *args, **kwargs):
+        if self.person.amount_left is not None:
+            self.person.amount_left = self.person.amount_left - self.amount_payed
+        else:
+            self.person.amount_left = self.amount_payed
+        self.person.save()
+        super(PersonPayment, self).save()

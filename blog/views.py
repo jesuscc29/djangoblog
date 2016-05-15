@@ -9,21 +9,10 @@ from blog.blog_form import PostCreateForm
 from blog.models import *
 
 
-class BlogHome(ListView):
-    template_name = 'blog/index.html'
-    paginate_by = 5
-    page_kwarg = 'pagina'
-
-    def get_queryset(self):
-        return Post.objects.exclude(
-            published=False
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super(BlogHome, self).get_context_data(**kwargs)
-        context['last'] = self.request.session.get('last_login', None)
-
-        return context
+def blog_home(request):
+    context = dict()
+    request_context = RequestContext(request, context)
+    return render_to_response('blog/index.html', request_context)
 
 
 @login_required(login_url='login')

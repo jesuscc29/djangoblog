@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.forms import ModelForm, DateField
-from office.models import Patient, PatientStat, PatientVisit
+from office.models import Patient, PatientStat, PatientVisit, Person, \
+    PersonPayment
 
 __author__ = 'jesuscc29'
 
@@ -27,3 +28,15 @@ class PatientVisitForm(ModelForm):
     class Meta:
         model = PatientVisit
         fields = ['date', 'description']
+
+
+class PersonForm(ModelForm):
+    class Meta:
+        model = Person
+        fields = ['full_name', 'num_guest', 'total_amount']
+
+
+class PersonPaymentForm(ModelForm):
+    class Meta:
+        model = PersonPayment
+        fields = ['person', 'payment_date', 'amount_payed']

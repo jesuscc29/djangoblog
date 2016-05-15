@@ -1,0 +1,36 @@
+{% load custom_tagsnfilters %}
+<div class="modal" id="person_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Persona</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <form action="." method="post" id="person_form">
+                            {% csrf_token %}
+                            {% for field in person_form %}
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label col-sm-3 m-top15">
+                                        {{ field.label }}
+                                    </label>
+
+                                    <div class="col-sm-9">
+                                        {{ field|add_class:"form-control m-top15" }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="btnSavePerson">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

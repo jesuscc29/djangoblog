@@ -5,7 +5,7 @@ from django.conf.urls import patterns, url
 from .views import *
 
 urlpatterns = patterns('',
-                       url(r'^$', BlogHome.as_view(), name='blog_home'),
+                       url(r'^$', blog_home, name='blog_home'),
                        url(r'^nuevo/post/$', create_post, name='new_post'),
                        url(r'^herramientas/imc/$', imc_calculator,
                            name='imc_calculator'),

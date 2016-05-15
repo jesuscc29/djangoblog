@@ -8,5 +8,4 @@ __author__ = 'jesuscc29'
 class PostCreateForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content',
-                  'featured_image', 'thumbnail']
+        fields = ['title', 'content']

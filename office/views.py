@@ -4,10 +4,12 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.generic import ListView, CreateView, DetailView
-from office.forms import AddPatientForm, PatientStatsForm, PatientVisitForm
+from office.forms import AddPatientForm, PatientStatsForm, PatientVisitForm, \
+    PersonForm, PersonPaymentForm
 from office.functions import LoginRequiredMixin, get_patient_stat_list, \
     get_patient_weight_stats
-from office.models import Patient, PatientVisit, PatientStat
+from office.models import Patient, PatientVisit, PatientStat, Person, \
+    PersonPayment
 from recipes import response_json
 
 
@@ -206,3 +208,54 @@ def remove_patient_visit(request, pk):
         error = dict()
         error['message'] = 'Object PK not sent.'
         return response_json(error, 404)
+
+
+# ======== Views Containing Money COunt Functions
+class PersonList(ListView):
+    template_name = 'money/person_list.html'
+    context_object_name = 'persons'
+
+    def get_queryset(self):
+        persons = Person.objects.all()
+        return persons
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonList, self).get_context_data(**kwargs)
+        context['person_form'] = PersonForm()
+        context['person_payment_form'] = PersonPaymentForm()
+        return context
+
+
+def person_add(request):
+    person_form = PersonForm(request.POST or None)
+    if person_form.is_valid:
+        person = person_form.save(commit=False)
+        person.save()
+        return response_json('OK', 200)
+    else:
+        return response_json('Error guardando a la persona', 500)
+
+
+def person_payment_add(request):
+    person_payment_form = PersonPaymentForm(request.POST or None)
+    if person_payment_form.is_valid:
+        payment = person_payment_form.save(commit=False)
+        payment.save()
+        return response_json("OK", 200)
+    else:
+        return response_json('Error guardando el pago de la persona', 500)
+
+
+def get_person_payments(request, pk):
+    if pk is not None:
+        payments = PersonPayment.objects.filter(person__pk=pk).values(
+            'payment_date', 'amount_payed').order_by('-payment_date')
+        payment_list = list()
+        for payment in payments:
+            new_payment = dict()
+            new_payment['payment_date'] = payment['payment_date'].strftime('%d %b %Y')
+            new_payment['amount_payed'] = payment['amount_payed']
+            payment_list.append(new_payment)
+        return response_json(payment_list, 200)
+    else:
+        return response_json('No se envio un ID de persona', 404)

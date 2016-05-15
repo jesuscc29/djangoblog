@@ -4,68 +4,9 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/general_styles.css"/>
 {% endblock %}
 {% block content %}
-    <div class="row">
+    <div class="row text-center">
         <div class="col-md-12">
-            <h2>Bienvenido al Blog!</h2>
+            <h2>Bienvenido!</h2>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10"></div>
-        <div class="col-md-2">
-            {% if request.session.logged %}
-                <a href="{% url "new_post" %}">Nueva entrada <i class="fa fa-edit"></i> </a>
-            {% endif %}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="col-md-12">
-    {% if object_list %}
-        {% for post in object_list %}
-            <div class="row">
-                <div class="col-md-3">
-                    <a href="{% url "post_single" pk=post.pk %}">
-                        {% if post.thumbnail %}
-                            <img src="{{ MEDIA_URL }}{{ post.thumbnail }}" alt="thumbnail"/>
-                        {% else %}
-                            <img src="{{ STATIC_URL }}images/no-image.png" alt="thumbnail" class="post-image"/>
-                        {% endif %}
-                    </a>
-                </div>
-                <div class="col-md-9">
-                    <a href="{% url "post_single" pk=post.pk %}"><h3>{{ post.title }}</h3></a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <br/>
-                    <strong>Autor: </strong>
-                    {{ post.author.first_name }} {{ post.author.last_name }}<br/>
-                    <strong>Fecha de Publicaci&oacute;n: </strong>
-                    {{ post.published_date|date:"d M Y" }}
-                </div>
-                <div class="col-md-9">
-                    {{ post.content|truncatewords_html:100|safe }}
-                    <a href="{% url "post_single" pk=post.pk %}">Leer completo &raquo;</a>
-                </div>
-            </div>
-            <hr/>
-        {% endfor %}
-        {% if is_paginated %}
-            <div class="row pagination text-center">
-                {% if page_obj.has_previous %}
-                    <a href="{% url "blog_home" %}?pagina={{ page_obj.previous_page_number }}" class="btn btn-default">Anterior</a>
-                {% endif %}
-                <span class="page-current">
-                    <button class="btn btn-default" disabled>{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</button> {# de {{ page_obj.paginator.num_pages }} #}
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="{% url "blog_home" %}?pagina={{ page_obj.next_page_number }}" class="btn btn-default">Siguiente</a>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% else %}
-        No hay entradas.
-    {% endif %}
     </div>
 {% endblock %}
