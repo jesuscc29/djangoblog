@@ -259,3 +259,14 @@ def get_person_payments(request, pk):
         return response_json(payment_list, 200)
     else:
         return response_json('No se envio un ID de persona', 404)
+
+
+def remove_person(request, pk):
+    if pk is not None:
+        person_payments = PersonPayment.objects.filter(person__pk=pk)
+        person_payments.delete()
+        person = Person.objects.get(pk=pk)
+        person.delete()
+        return response_json("OK", 200)
+    else:
+        return response_json("Error eliminando la persona seleccionada", 500)

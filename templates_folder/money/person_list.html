@@ -16,7 +16,8 @@
                         <a class="btn btn-primary btn-sm" href="#person_modal" data-toggle="modal" id="btnAddPerson">
                             Agregar Persona&nbsp;&nbsp;<i class="fa fa-user"></i>
                         </a>
-                        <a class="btn btn-info btn-sm" href="#person_payment_modal" data-toggle="modal" id="btnAddPersonPayment">
+                        <a class="btn btn-info btn-sm" href="#person_payment_modal" data-toggle="modal"
+                           id="btnAddPersonPayment">
                             Agregar Pago&nbsp;&nbsp;<i class="fa fa-credit-card"></i>
                         </a>
                     </div>
@@ -28,6 +29,7 @@
                                 <th class="text-center">Total a Pagar</th>
                                 <th class="text-center">Restante</th>
                                 <th class="text-center">Ver Pagos</th>
+                                <th class="text-center">Borrar</th>
                             </tr>
                             {% for person in persons %}
                                 <tr class="text-center">
@@ -37,7 +39,7 @@
                                         <b>${{ person.total_amount|stringformat:".2f"|intcomma }}</b>
                                     </td>
                                     <td>
-                                        {%  if person.amount_left > 0 %}
+                                        {% if person.amount_left > 0 %}
                                             <span style="color:#ff0000;font-weight: bold;">
                                                 ${{ person.amount_left|stringformat:".2f"|intcomma }}
                                             </span>
@@ -50,6 +52,10 @@
                                     <td>
                                         <a href="#" class="btnViewPersonPayments" rel="{{ person.pk }}">Ver Pagos</a>
                                     </td>
+                                    <td>
+                                        <a href="#" class="btnRemovePerson" rel="{{ person.pk }}"><i
+                                                class="fa fa-trash-o"></i></a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -61,61 +67,91 @@
     {% include "money/modals/person_modal.html" %}
     {% include "money/modals/person_payment.html" %}
     {% include "money/modals/payment_list.html" %}
+    {% include "modals/confirm_modal.html" %}
+    {% include "modals/error_modal.html" %}
 {% endblock %}
 {% block aditional_js %}
+    <script src="{{ STATIC_URL }}js/modals.js"></script>
     <script type="application/javascript">
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            $("#btnSavePerson").click(function() {
+            $("#btnSavePerson").click(function () {
                 $(this).button("loading");
                 var $personForm = $("#person_form");
                 $.ajax({
                     type: "post",
                     url: "{% url "person_add" %}",
                     data: $personForm.serialize(),
-                    success: function() {
+                    success: function () {
                         document.location.reload();
                     },
-                    error: function(errorMessage) {
+                    error: function (errorMessage) {
                         $("#btnSavePerson").button("reset");
                         alert(errorMessage.statusText);
                     }
                 });
             });
 
-            $("#btnSavePersonPayment").click(function() {
+            $("#btnSavePersonPayment").click(function () {
                 $(this).button("loading");
                 var $personPaymentForm = $("#person_payment_form");
                 $.ajax({
                     type: "post",
                     url: "{% url "person_payment_add" %}",
                     data: $personPaymentForm.serialize(),
-                    success: function() {
+                    success: function () {
                         document.location.reload();
                     },
-                    error: function(errorMessage) {
+                    error: function (errorMessage) {
                         $("#btnAddPersonPayment").button("reset");
-                        alert(errorMessage.statusText);
+                        showErrorAlert("Error", errorMessage.responseText);
                     }
                 });
             });
 
-            $(".btnViewPersonPayments").click(function() {
+            $(".btnViewPersonPayments").click(function () {
                 var person_pk = $(this).attr("rel");
                 var $bodyPersonPayments = $("#bodyPersonPayments");
                 $bodyPersonPayments.html("");
-                $.when(getPersonPaymentList(person_pk)).done(function(list) {
-                    list.forEach(function(payment) {
-                         var $row = $("<tr>");
+                $.when(getPersonPaymentList(person_pk)).done(function (list) {
+                    var amount = 0;
+                    list.forEach(function (payment) {
+                        amount += payment.amount_payed;
+                        var $row = $("<tr>");
                         var $paymentDate = $("<td>").html(payment.payment_date).addClass("text-center");
                         var $paymentAmount = $("<td>").html("$" + payment.amount_payed.toFixed(2)
                                         .replace(/\d(?=(\d{3})+\.)/g, '$&,')).addClass("text-center");
                         $row.append($paymentDate).append($paymentAmount);
                         $bodyPersonPayments.append($row);
                     });
+                    $("#personTotalPayed").html("$" + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
                 });
                 $("#person_payment_list_modal").modal("show");
+            });
+
+            $(".btnRemovePerson").click(function () {
+                var personPK = $(this).attr("rel");
+                showConfirmAlert("Advertencia", "¿Está seguro que desea eliminar la persona seleccionada?");
+                $("#btnConfirmAction").unbind("click").click(function () {
+                    $(this).button("loading");
+                    var url = "{% url "remove_person" pk=0 %}";
+                    url = url.replace("0", personPK);
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        data: {
+                            "csrfmiddlewaretoken": "{{ csrf_token }}"
+                        },
+                        success: function () {
+                            document.location.reload();
+                        },
+                        error: function (errorMessage) {
+                            $("#btnConfirmAction").button("loading");
+                            showErrorAlert("Error", errorMessage.responseText);
+                        }
+                    })
+                });
             });
 
             function getPersonPaymentList(person_pk) {

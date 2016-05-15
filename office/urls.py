@@ -5,7 +5,7 @@ from office.views import PatientList, PatientCreate, PatientDetail, \
     edit_patient_stats, remove_patient_status, save_patient_visit, \
     edit_patient_visit, get_patient_visit_details, \
     remove_patient_visit, PersonList, person_add, person_payment_add, \
-    get_person_payments
+    get_person_payments, remove_person
 
 __author__ = 'jesuscc29'
 
@@ -50,4 +50,7 @@ urlpatterns = patterns('',
                        url(r'^personas/pago/ver/(?P<pk>\d+)/$',
                            get_person_payments,
                            name='get_person_payments'),
+                       url(r'^personas/borrar/(?P<pk>\d+)/$',
+                           remove_person,
+                           name='remove_person'),
                        )
