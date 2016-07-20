@@ -26,11 +26,11 @@ PROJECT_PATH = os.path.abspath(
 SECRET_KEY = '_jka5q4r$f(wfcftl^jfv_r!my&$h_w+=iihls!z6k4qosqzfs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
 
