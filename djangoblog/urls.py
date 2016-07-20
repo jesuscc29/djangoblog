@@ -4,6 +4,7 @@ from blog.views import blog_home
 from djangoblog import settings
 from djangoblog.views import user_login, user_logout
 from blog import urls as blog_urls
+from garnachapi import urls as api_urls
 
 urlpatterns = patterns('',
                        url(r'^$', blog_home, name='home'),
@@ -13,6 +14,7 @@ urlpatterns = patterns('',
                        url(r'^consultorio/', include('office.urls'),
                            name='office_home'),
                        url(r'^admin/', include(admin.site.urls)),
+                       url(r'^api/', include(api_urls)),
 
                        (r'^static/(?P<path>.*)$', 'django.views.static.serve',
                         {'document_root': settings.STATIC_ROOT}),

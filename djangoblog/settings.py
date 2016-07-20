@@ -31,6 +31,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -43,8 +44,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib',
     'blog',
     'office',
+    'garnachapi',
+    'rest_framework',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
