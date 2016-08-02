@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% block title %}Lugares | Lista{% endblock %}
+{% block aditional_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/general_styles.css"/>
+{% endblock %}
+{% block content %}
+    <div class="row text-left">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Pacientes</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row text-center m-bot15">
+                        <div class="col-md-12">
+                            <a class="btn btn-success btn-sm" href="#" id="btnAddPlace">
+                                Nuevo Lugar&nbsp;<i class="fa fa-plus-square"></i>
+                            </a>
+                            <a class="btn btn-primary btn-sm" href="#" id="btnAddCategory" onclick="alert('Coming soon...')">
+                                Nueva Categor&iacute;a&nbsp;<i class="fa fa-plus-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Descripci&oacute;n</th>
+                                <th class="text-center">Rango de Precios</th>
+                                <th class="text-center">Tipo</th>
+                                <th class="text-center">Ubicaci&oacute;n</th>
+                                <th class="text-center">Opciones</th>
+                            </tr>
+                            {% for place in places %}
+                                <tr class="text-center">
+                                    <td>{{ place.name }}</td>
+                                    <td>{{ place.description }}</td>
+                                    <td>{{ place.price }}</td>
+                                    <td>{{ place.palce_type.type }}</td>
+                                    <td>
+                                        <a href="#" class="btnShowMap" lat="{{ place.latitude }}"
+                                           lng="{{ place.longitude }}"><i class="fa fa-map-marker"></i>&nbsp;Ver
+                                            Mapa</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" rel="{{ place.pk }}" lat="{{ place.latitude }}"
+                                           lng="{{ place.longitude }}" class="btnUpdatePlace">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        &nbsp;|&nbsp;
+                                        <a href="#" rel="{{ place.pk }}" class="btnRemovePlace">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include "gapp/modals/place_generic_modal.html" %}
+    {% include "modals/error_modal.html" %}
+    {% include "modals/confirm_modal.html" %}
+    {% include "gapp/modals/show_location_modal.html" %}
+{% endblock %}
+{% block aditional_js %}
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?v=3.20">
+    </script>
+    <script src="{{ STATIC_URL }}js/modals.js"></script>
+    <script src="{{ STATIC_URL }}js/validateForm.js"></script>
+
+    <script type="application/javascript">
+
+        $(document).ready(function () {
+
+            $(".btnUpdatePlace").click(function () {
+                var place_pk = $(this).attr("rel");
+                var lat = $(this).attr("lat");
+                var lng = $(this).attr("lng");
+                var $place_modal = $("#place_generic_modal");
+                $place_modal.find(".modal-title").html("Actualizar Lugar");
+                $("#place_type").attr("rel", place_pk);
+                $.ajax({
+                    type: "get",
+                    url: "{% url "get_place_details" %}",
+                    data: {
+                        place_pk: place_pk
+                    },
+                    success: function (data) {
+                        data = data[0];
+                        console.log(data);
+                        $("#id_name").val(data['name']);
+                        $("#id_icon").val(data['icon']);
+                        $("#id_description").val(data['description']);
+                        $("#id_price").val(data['price']);
+                        $("#id_palce_type").val(data['palce_type__pk']);
+                        $("#latitude").val(data['latitude']);
+                        $("#longitude").val(data['longitude']);
+                    },
+                    error: function (response) {
+                        var msg = JSON.parse(response.responseText);
+                        showErrorAlert("Error", msg.error);
+                    }
+                });
+                $place_modal.modal("show");
+                initMapFormUpdate(lat, lng);
+            });
+
+            $("#btnSavePlace").unbind("click").click(function () {
+                var $addPlaceForm = $("#place_generic_form");
+                if (validateForm($addPlaceForm)) {
+                    if (validCoordinates()) {
+                        $("#btnSavePlace").button("loading");
+                        var url = "";
+                        // New Location
+                        if ($("#place_type").attr("rel") == "") {
+                            url = "{% url "create_place" %}";
+                        } else { // Edit Location
+                            url = "{% url "update_place" pk=0 %}";
+                            url = url.replace("0", $("#place_type").attr("rel"));
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $addPlaceForm.serialize(),
+                            success: function () {
+                                document.location.reload();
+                            },
+                            error: function (response) {
+                                $("#btnSavePlace").button("reset");
+                                var msg = JSON.parse(response.responseText);
+                                showErrorAlert("Error", msg.error);
+                            }
+                        })
+                    } else {
+                        showErrorAlert("Error", "Debes ingresar las coordenadas del lugar o mover el punto de la " +
+                                "ubicación predefinida.");
+                    }
+                }
+            });
+
+            $("#btnAddPlace").unbind("click").click(function () {
+                var $place_modal = $("#place_generic_modal");
+                $place_modal.find(".modal-title").html("Nuevo Lugar");
+                $("#place_type").attr("rel", "");
+                $place_modal.modal("show");
+                initMapForm();
+            });
+
+            function validCoordinates() {
+                return !!($("#latitude").val() != "" && $("#longitude").val() != "");
+            }
+
+            var def_lat = 20.5869288;
+            var def_lng = -100.3868626;
+
+            function initMapForm() {
+                var myLatlng = new google.maps.LatLng(def_lat, def_lng);
+                var mapOptions = {
+                    zoom: 14,
+                    center: myLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    animation: google.maps.Animation.BOUNCE,
+                    disableDefaultUI: true
+                };
+
+                var map = new google.maps.Map(document.getElementById("generic-map-form"), mapOptions);
+
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    draggable: true
+                });
+
+                marker.setMap(map);
+
+                google.maps.event.addDomListener(marker, "dragend", function (evt) {
+                    $("#latitude").val(evt.latLng.lat());
+                    $("#longitude").val(evt.latLng.lng());
+                });
+            }
+
+            function initMapFormUpdate(lat, lng) {
+                var myLatlng = new google.maps.LatLng(lat, lng);
+                var mapOptions = {
+                    zoom: 14,
+                    center: myLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    animation: google.maps.Animation.BOUNCE,
+                    disableDefaultUI: true
+                };
+
+                var map = new google.maps.Map(document.getElementById("generic-map-form"), mapOptions);
+
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    draggable: true
+                });
+
+                marker.setMap(map);
+
+                google.maps.event.addDomListener(marker, "dragend", function (evt) {
+                    $("#latitude").val(evt.latLng.lat());
+                    $("#longitude").val(evt.latLng.lng());
+                });
+            }
+
+            var lat;
+            var lng;
+
+            $(".btnShowMap").click(function () {
+                lat = $(this).attr("lat");
+                lng = $(this).attr("lng");
+                $("#showLocationModal").modal("show");
+                google.maps.event.trigger(map, 'resize');
+            });
+
+            $('#showLocationModal').on('shown.bs.modal', function (e) {
+                showLocationOnMap(lat, lng);
+            });
+
+            $(".btnRemovePlace").click(function () {
+                var place_pk = $(this).attr("rel");
+                showConfirmAlert("Aviso", "¿Desea eliminar el lugar seleccionado? ¡NO se podrá revertis esta acción!");
+                $("#btnConfirmAction").unbind("click").click(function () {
+                    $(this).button("loading");
+                    $.ajax({
+                        type: "post",
+                        url: "{% url "remove_place" %}",
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                            place_pk: place_pk
+                        },
+                        success: function () {
+                            document.location.reload();
+                        },
+                        error: function (reponse) {
+                            $("#btnConfirmAction").button("reset");
+                            var msg = JSON.parse(reponse.responseText);
+                            showErrorAlert("Error", msg.error);
+                        }
+                    });
+                });
+            });
+        });
+
+        function showLocationOnMap(lat, lng) {
+            var myLatlng = new google.maps.LatLng(lat, lng);
+            var mapOptions = {
+                zoom: 14,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true
+            };
+
+            var map = new google.maps.Map(document.getElementById("showMap"), mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: myLatlng
+            });
+
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        }
+
+    </script>
+
+{% endblock %}
