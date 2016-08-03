@@ -5,19 +5,17 @@
 {% endblock %}
 {% block content %}
     <div class="row text-left">
-        <div class="col-md-12">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Pacientes</h3>
-                </div>
-                <div class="box-body">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Lugares</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Categor&iacute;as</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
                     <div class="row text-center m-bot15">
                         <div class="col-md-12">
                             <a class="btn btn-success btn-sm" href="#" id="btnAddPlace">
                                 Nuevo Lugar&nbsp;<i class="fa fa-plus-square"></i>
-                            </a>
-                            <a class="btn btn-primary btn-sm" href="#" id="btnAddCategory" onclick="alert('Coming soon...')">
-                                Nueva Categor&iacute;a&nbsp;<i class="fa fa-plus-square"></i>
                             </a>
                         </div>
                     </div>
@@ -57,10 +55,44 @@
                         </table>
                     </div>
                 </div>
+                <div class="tab-pane" id="tab_2">
+                    <div class="row text-center m-bot15">
+                        <div class="col-md-12">
+                            <a class="btn btn-primary btn-sm" href="#" id="btnAddCategory">
+                                Nueva Categor&iacute;a&nbsp;<i class="fa fa-plus-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th class="text-center">Categor&iacute;a</th>
+                                <th class="text-center">Descripci&oacute;n</th>
+                                <th class="text-center">Opciones</th>
+                            </tr>
+                            {% for category in categories %}
+                                <tr class="text-center">
+                                    <td>{{ category.type }}</td>
+                                    <td>{{ category.description }}</td>
+                                    <td>
+                                        <a href="#" rel="{{ category.pk }}" class="btnUpdateCategory">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        &nbsp;|&nbsp;
+                                        <a href="#" rel="{{ category.pk }}" class="btnRemoveCategory">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     {% include "gapp/modals/place_generic_modal.html" %}
+    {% include "gapp/modals/category_generic_modal.html" %}
     {% include "modals/error_modal.html" %}
     {% include "modals/confirm_modal.html" %}
     {% include "gapp/modals/show_location_modal.html" %}
@@ -75,6 +107,98 @@
     <script type="application/javascript">
 
         $(document).ready(function () {
+
+            /**
+             * Place Category Functions
+             * */
+
+            $(".btnUpdateCategory").click(function () {
+                var category_pk = $(this).attr("rel");
+                var $category_modal = $("#category_generic_modal");
+                $category_modal.find(".modal-title").html("Actualizar Categor&iacute;a");
+                $("#category_type").attr("rel", category_pk);
+                $.ajax({
+                    type: "get",
+                    url: "{% url "get_category_details" %}",
+                    data: {
+                        category_pk: category_pk
+                    },
+                    success: function (data) {
+                        data = data[0];
+                        console.log(data);
+                        $("#id_cat-type").val(data['type']);
+                        $("#id_cat-description").val(data['description']);
+                    },
+                    error: function (response) {
+                        var msg = JSON.parse(response.responseText);
+                        showErrorAlert("Error", msg.error);
+                    }
+                });
+                $category_modal.modal("show");
+            });
+
+            $(".btnRemoveCategory").click(function () {
+                var category_pk = $(this).attr("rel");
+                showConfirmAlert("Aviso", "¿Desea eliminar la categor&iacute;a seleccionada? ¡NO se podrá revertis esta acción!");
+                $("#btnConfirmAction").unbind("click").click(function () {
+                    $(this).button("loading");
+                    $.ajax({
+                        type: "post",
+                        url: "{% url "remove_category" %}",
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                            category_pk: category_pk
+                        },
+                        success: function () {
+                            document.location.reload();
+                        },
+                        error: function (reponse) {
+                            $("#btnConfirmAction").button("reset");
+                            var msg = JSON.parse(reponse.responseText);
+                            showErrorAlert("Error", msg.error);
+                        }
+                    });
+                });
+            });
+
+            $("#btnSaveCategory").unbind("click").click(function () {
+                var $categoryFrom = $("#category_generic_form");
+                if (validateForm($categoryFrom)) {
+                    $("#btnSaveCategory").button("loading");
+                    var url = "";
+                    // New Location
+                    if ($("#category_type").attr("rel") == "") {
+                        url = "{% url "create_category" %}";
+                    } else { // Edit Location
+                        url = "{% url "update_category" pk=0 %}";
+                        url = url.replace("0", $("#category_type").attr("rel"));
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: $categoryFrom.serialize(),
+                        success: function () {
+                            document.location.reload();
+                        },
+                        error: function (response) {
+                            $("#btnSaveCategory").button("reset");
+                            var msg = JSON.parse(response.responseText);
+                            showErrorAlert("Error", msg.error);
+                        }
+                    })
+                }
+            });
+
+            $("#btnAddCategory").click(function () {
+                var $category_modal = $("#category_generic_modal");
+                $category_modal.find(".modal-title").html("Nueva Categor&iacute;a");
+                $("#category_type").attr("rel", "");
+                $category_modal.modal("show");
+            });
+
+            /**
+             * Place Functions ***
+             */
 
             $(".btnUpdatePlace").click(function () {
                 var place_pk = $(this).attr("rel");
@@ -134,7 +258,7 @@
                                 var msg = JSON.parse(response.responseText);
                                 showErrorAlert("Error", msg.error);
                             }
-                        })
+                        });
                     } else {
                         showErrorAlert("Error", "Debes ingresar las coordenadas del lugar o mover el punto de la " +
                                 "ubicación predefinida.");

@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from garnachapi.forms import PlaceForm
+from garnachapi.forms import PlaceForm, PlaceTypeForm
 from garnachapi.models import PlaceType, Place
 from recipes import response_json
 
@@ -66,6 +66,7 @@ def places_by_category(request):
         response['message'] = 'Error: ' + e.message
         return Response(response)
 
+
 # ============================= GUI Views ==================================
 
 
@@ -80,6 +81,9 @@ class PlaceList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PlaceList, self).get_context_data(**kwargs)
         context['place_form'] = PlaceForm(None)
+        context['category_form'] = PlaceTypeForm(None, prefix='cat')
+        context['categories'] = PlaceType.objects.all().values(
+            'type', 'description', 'pk')
         return context
 
 
@@ -167,3 +171,78 @@ def get_place_details(request):
         errors['error'] = 'No se indicó un lugar a actualizar'
         return response_json(errors, 404)
 
+
+def create_category(request):
+    errors = dict()
+    if request.method == 'POST':
+        category_form = PlaceTypeForm(request.POST or None, prefix='cat')
+        if category_form.is_valid:
+            new_category = category_form.save(commit=False)
+            new_category.save()
+            return response_json("OK", 200)
+        else:
+            errors['error'] = 'Revise los datos ingresados.'
+            return response_json(errors, 500)
+    else:
+        errors['error'] = 'No permitido'
+        return response_json(errors, 403)
+
+
+def remove_category(request):
+    errors = dict()
+    if request.method == 'POST':
+        category_pk = request.POST.get('category_pk', None)
+        if category_pk is not None:
+            try:
+                category = PlaceType.objects.get(pk=category_pk)
+                category.delete()
+                return response_json("OK", 200)
+            except Place.DoesNotExist:
+                errors['error'] = 'La categoría seleccionada no existe.'
+                return response_json(errors, 404)
+        else:
+            errors['error'] = 'Debes seleccionar una categoría a borrar.'
+            return response_json(errors, 404)
+    else:
+        errors['error'] = 'No permitido'
+        return response_json(errors, 403)
+
+
+def get_category_details(request):
+    errors = dict()
+    category_pk = request.GET.get('category_pk', None)
+    if category_pk is not None:
+        category = PlaceType.objects.filter(pk=category_pk).values(
+            'pk', 'type', 'description'
+        )
+        return response_json(list(category), 200)
+    else:
+        errors['error'] = 'No se indicó un lugar a actualizar'
+        return response_json(errors, 404)
+
+
+def update_category(request, pk):
+    errors = dict()
+    if request.method == 'POST':
+        if pk is not None:
+            try:
+                category_obj = PlaceType.objects.get(pk=pk)
+                category_form = PlaceTypeForm(request.POST,
+                                              instance=category_obj,
+                                              prefix='cat')
+                if category_form.is_valid:
+                    new_category = category_form.save(commit=False)
+                    new_category.save()
+                    return response_json("OK", 200)
+                else:
+                    errors['error'] = 'Revise los datos ingresados.'
+                    return response_json(errors, 500)
+            except Place.DoesNotExist:
+                errors['error'] = 'No existe la categoría seleccionada.'
+                return response_json(errors, 404)
+        else:
+            errors['error'] = 'No se indicó una categoría a actualizar.'
+            return response_json(errors, 404)
+    else:
+        errors['error'] = 'No permitido'
+        return response_json(errors, 403)

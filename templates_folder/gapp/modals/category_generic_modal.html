@@ -1,0 +1,40 @@
+{% load custom_tagsnfilters %}
+<div class="modal" id="category_generic_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <form action="." method="post" id="category_generic_form">
+                            {% csrf_token %}
+                            {% for field in category_form %}
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label col-sm-3 m-top15">
+                                        {{ field.label }}
+                                    </label>
+                                    <div class="col-sm-9">
+                                        {% if field.field.required %}
+                                            {{ field|add_class:"form-control m-top15 required" }}
+                                        {% else %}
+                                            {{ field|add_class:"form-control m-top15" }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </form>
+                        <input type="text" hidden="hidden" rel="" id="category_type"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="btnSaveCategory">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
