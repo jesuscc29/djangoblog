@@ -1,2 +1,2 @@
 # djangoblog
-A Blog written in django for a test
+A Blog written in django for a testa
